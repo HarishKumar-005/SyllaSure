@@ -1,10 +1,10 @@
 import csv
 import hashlib
-from logging import root
 import os
 import sys
 import time
 from datetime import date
+from logging import root
 from urllib.parse import urlparse
 from urllib.robotparser import RobotFileParser
 
