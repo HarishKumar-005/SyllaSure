@@ -158,7 +158,7 @@ This is the intended workflow; each stage must be implemented and tested before 
 
 ### Primary source
 
-- **Anna University — UG curriculum and syllabi, R2023:**  
+- **Anna University — UG curriculum and syllabi, R2023:**
   https://cac.annauniv.edu/uddetails/ud_ug_cands_2023.html
 
 ### Planned document coverage

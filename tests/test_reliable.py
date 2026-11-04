@@ -39,14 +39,20 @@ def test_retries_transient_errors_then_succeeds():
     assert "".join(chunk.text for chunk in chunks) == "ok"
     assert provider.calls == 3
     assert len(delays) == 2
-    assert all(0 <= delay <= limit for delay, limit in zip(delays, (0.5, 1.0), strict=True))
+    assert all(
+        0 <= delay <= limit for delay, limit in zip(delays, (0.5, 1.0), strict=True)
+    )
 
 
 def test_does_not_retry_authentication_errors():
     provider = SequenceProvider([ProviderError("bad key", status_code=401)])
 
     with pytest.raises(LLMConfigurationError):
-        list(ReliableLLM(provider, sleep=lambda _: pytest.fail("must not sleep")).stream(REQUEST))
+        list(
+            ReliableLLM(provider, sleep=lambda _: pytest.fail("must not sleep")).stream(
+                REQUEST
+            )
+        )
 
     assert provider.calls == 1
 
@@ -55,7 +61,9 @@ def test_fallback_runs_after_primary_is_unavailable():
     primary = SequenceProvider([ProviderError("down", status_code=503)])
     fallback = FakeProvider(chunks=("fallback",))
 
-    chunks = list(ReliableLLM(primary, fallback=fallback, sleep=lambda _: None).stream(REQUEST))
+    chunks = list(
+        ReliableLLM(primary, fallback=fallback, sleep=lambda _: None).stream(REQUEST)
+    )
 
     assert "".join(chunk.text for chunk in chunks) == "fallback"
     assert primary.calls == 4
@@ -75,7 +83,11 @@ def test_partial_output_is_not_retried_or_fallen_back():
     fallback = FakeProvider(chunks=("fallback",))
 
     with pytest.raises(LLMUnavailable):
-        list(ReliableLLM(primary, fallback=fallback, sleep=lambda _: None).stream(REQUEST))
+        list(
+            ReliableLLM(primary, fallback=fallback, sleep=lambda _: None).stream(
+                REQUEST
+            )
+        )
 
     assert primary.calls == 1
     assert fallback.calls == 0

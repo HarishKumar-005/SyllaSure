@@ -10,12 +10,17 @@ from app.main import app, get_llm
 
 def test_chat_streams_sse_events():
     app.dependency_overrides[get_settings] = lambda: Settings(environment="test")
-    app.dependency_overrides[get_llm] = lambda: AsyncReliableLLM(FakeProvider(chunks=("Hi", " there")))
+    app.dependency_overrides[get_llm] = lambda: AsyncReliableLLM(
+        FakeProvider(chunks=("Hi", " there"))
+    )
     try:
         with TestClient(app) as client:
             response = client.post(
                 "/chat",
-                json={"messages": [{"role": "user", "content": "Hello"}], "model": "fake-model"},
+                json={
+                    "messages": [{"role": "user", "content": "Hello"}],
+                    "model": "fake-model",
+                },
             )
     finally:
         app.dependency_overrides.clear()

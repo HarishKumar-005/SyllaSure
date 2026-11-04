@@ -26,7 +26,10 @@ class OpenAICompatProvider(LLMProvider):
     async def stream_async(self, request: LLMRequest) -> AsyncIterator[TextChunk]:
         payload = {
             "model": request.model or self.model,
-            "messages": [{"role": message.role, "content": message.content} for message in request.messages],
+            "messages": [
+                {"role": message.role, "content": message.content}
+                for message in request.messages
+            ],
             "stream": True,
             "stream_options": {"include_usage": True},
         }
@@ -62,7 +65,9 @@ class OpenAICompatProvider(LLMProvider):
                         try:
                             chunk = json.loads(data)
                         except json.JSONDecodeError as error:
-                            raise ProviderError("provider returned invalid stream JSON") from error
+                            raise ProviderError(
+                                "provider returned invalid stream JSON"
+                            ) from error
                         usage = _usage_from_chunk(chunk)
                         if usage is not None:
                             yield TextChunk("", usage=usage)
