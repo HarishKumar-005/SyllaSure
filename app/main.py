@@ -34,7 +34,6 @@
 #     return {"status": "ok", "app": settings.app_name, "environment": settings.environment}
 
 
-
 import json
 from collections.abc import AsyncIterator
 from typing import Annotated
@@ -60,13 +59,16 @@ def get_llm(settings: SettingsDep) -> AsyncReliableLLM:
 
 LLMDep = Annotated[AsyncReliableLLM, Depends(get_llm)]
 
+
 @app.get("/hello")
 def say_hello():
     return "hello"
 
+
 @app.get("/")
 def say_root():
     return "You are on root page"
+
 
 @app.get("/health")
 def health(settings: SettingsDep) -> dict:
@@ -102,5 +104,3 @@ async def chat(request: ChatRequest, provider: LLMDep) -> StreamingResponse:
         yield sse({"usage": usage_data, "cost_usd": 0.0}, event="done")
 
     return StreamingResponse(event_stream(), media_type="text/event-stream")
-
-
